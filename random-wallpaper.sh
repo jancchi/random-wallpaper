@@ -48,7 +48,9 @@ fi
 mkdir -p "$DATA_DIR"
 touch "$HISTORY_FILE" "$FUTURE_FILE"
 
+shopt -s nullglob
 wallpapers=("$WALLPAPER_DIR"/*.{png,jpg,jpeg,webp})
+shopt -u nullglob
 
 if [ ${#wallpapers[@]} -eq 0 ]; then
     echo "Error: No wallpapers found in $WALLPAPER_DIR"
@@ -100,8 +102,11 @@ swww img "$SELECTED_WALLPAPER" --transition-type random
 
 matugen image "$SELECTED_WALLPAPER"
 	
-
-pkill -SIGUSR2 waybar
+if pgrep -x "waybar" > /dev/null; then
+    pkill -SIGUSR2 waybar
+else
+    waybar & # Start it if it isn't running
+fi
 
 killall -USR1 kitty
 
