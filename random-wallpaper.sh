@@ -52,12 +52,18 @@ shopt -s nullglob
 wallpapers=("$WALLPAPER_DIR"/*.{png,jpg,jpeg,webp})
 shopt -u nullglob
 
-if [ ${#wallpapers[@]} -eq 0 ]; then
+WALL_SIZE=${#wallpapers[@]}
+
+echo "There are $WALL_SIZE wallpapers detected"
+
+if [ $WALL_SIZE -eq 0 ]; then
     echo "Error: No wallpapers found in $WALLPAPER_DIR"
     exit 1
 fi
 
 ARG=${1:-next}
+
+SELECTED_WALLPAPER="null"
 
 if [[ "$ARG" == "next" ]]; then
 	
@@ -71,7 +77,7 @@ if [[ "$ARG" == "next" ]]; then
 
 	else
 
-		RANDOM_INDEX=$(( RANDOM % ${#wallpapers[@]} ))
+		RANDOM_INDEX=$(( RANDOM % $WALL_SIZE ))
 
 		SELECTED_WALLPAPER="${wallpapers[$RANDOM_INDEX]}"
 
@@ -105,10 +111,8 @@ matugen image "$SELECTED_WALLPAPER"
 if pgrep -x "waybar" > /dev/null; then
     pkill -SIGUSR2 waybar
 else
-    waybar & # Start it if it isn't running
+    waybar & 
 fi
-
-waybar
 
 killall -USR1 kitty || true
 
