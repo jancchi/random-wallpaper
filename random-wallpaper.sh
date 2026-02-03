@@ -3,9 +3,24 @@
 set -euo pipefail
 
 WALLPAPER_DIR="${WALLPAPER_DIR:-$HOME/Pictures/Wallpapers}"
-DATA_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/hypr-wallpaper"
+DATA_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/random-wallpaper"
 HISTORY_FILE="$DATA_DIR/hist.txt"
 FUTURE_FILE="$DATA_DIR/future.txt"
+
+MATUGEN_CONF_DIR="$HOME/.config/matugen"
+MATUGEN_TEMPLATE_DIR="$MATUGEN_CONF_DIR/templates"
+
+if [ ! -f "$MATUGEN_CONF_DIR/config.toml" ]; then
+    echo "Initializing Matugen config..."
+    mkdir -p "$MATUGEN_CONF_DIR"
+    cp /usr/share/random-wallpaper/templates/matugen.toml "$MATUGEN_CONF_DIR/config.toml"
+fi
+
+if [ ! -d "$MATUGEN_TEMPLATE_DIR" ]; then
+    echo "Initializing Matugen templates..."
+    mkdir -p "$MATUGEN_TEMPLATE_DIR"
+    cp /usr/share/random-wallpaper/templates/colors.conf "$MATUGEN_TEMPLATE_DIR/"
+fi
 
 mkdir -p "$DATA_DIR"
 mkdir -p "$WALLPAPER_DIR"
@@ -61,9 +76,9 @@ fi
 
 swww img "$SELECTED_WALLPAPER" --transition-type random
 
-wallust run "$SELECTED_WALLPAPER"
+matugen image "$SELECTED_WALLPAPER"
 	
-    
+
 pkill -SIGUSR2 waybar
 
 killall -USR1 kitty
