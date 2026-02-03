@@ -7,6 +7,29 @@ DATA_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/random-wallpaper"
 HISTORY_FILE="$DATA_DIR/hist.txt"
 FUTURE_FILE="$DATA_DIR/future.txt"
 
+CONF_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/random-wallpaper"
+CONF_FILE="$CONF_DIR/config"
+
+mkdir -p "$CONF_DIR" 
+
+if [[ ! -f "$CONF_FILE" ]]; then
+    echo "Error: Configuration file not found at $CONF_FILE"
+    echo "Please create it and add: WALLPAPER_DIR=/path/to/your/wallpapers"
+
+    echo "WALLPAPER_DIR=$HOME/Pictures/Wallpapers" > "$CONF_FILE"
+    echo "A template has been created for you. Please edit it and run again."
+    exit 1
+fi
+
+
+source "$CONF_FILE"
+
+if [[ ! -d "${WALLPAPER_DIR:-}" ]]; then
+    echo "Error: WALLPAPER_DIR is not set or is not a valid directory."
+    echo "Check your config at: $CONF_FILE"
+    exit 1
+fi
+
 MATUGEN_CONF_DIR="$HOME/.config/matugen"
 MATUGEN_TEMPLATE_DIR="$MATUGEN_CONF_DIR/templates"
 
@@ -23,7 +46,6 @@ if [ ! -d "$MATUGEN_TEMPLATE_DIR" ]; then
 fi
 
 mkdir -p "$DATA_DIR"
-mkdir -p "$WALLPAPER_DIR"
 touch "$HISTORY_FILE" "$FUTURE_FILE"
 
 wallpapers=("$WALLPAPER_DIR"/*.{png,jpg,jpeg,webp})
