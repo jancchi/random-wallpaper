@@ -108,7 +108,9 @@ else
     waybar & # Start it if it isn't running
 fi
 
-killall -USR1 kitty
+waybar
+
+killall -USR1 kitty || true
 
 hyprctl reload
 

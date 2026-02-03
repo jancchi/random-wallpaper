@@ -1,6 +1,6 @@
 # Maintainer: jancchi <jancchi.the.rock@gmail.com>
 pkgname=random-wallpaper-git # -git suffix is standard for dev versions
-pkgver=r5.aeae525            # This will be auto-updated
+pkgver=r6.c8245cc            # This will be auto-updated
 pkgrel=1
 pkgdesc="A script to manage wallpaper history and transitions in Hyprland"
 arch=('any')
