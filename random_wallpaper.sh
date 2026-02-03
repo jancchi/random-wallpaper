@@ -2,19 +2,21 @@
 
 set -euo pipefail
 
-WALLPAPER_DIR="/home/admin/Wallpaper-Bank/wallpapers"
-
-DATA_DIR="/home/admin/temp_swww"
-
+WALLPAPER_DIR="${WALLPAPER_DIR:-$HOME/Pictures/Wallpapers}"
+DATA_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/hypr-wallpaper"
 HISTORY_FILE="$DATA_DIR/hist.txt"
-
 FUTURE_FILE="$DATA_DIR/future.txt"
 
 mkdir -p "$DATA_DIR"
-touch "$HISTORY_FILE"
-touch "$FUTURE_FILE"
+mkdir -p "$WALLPAPER_DIR"
+touch "$HISTORY_FILE" "$FUTURE_FILE"
 
-wallpapers=("$WALLPAPER_DIR"/*.{png,jpg,jpeg,webp} "/home/admin/Wallpapers/images/*.png")
+wallpapers=("$WALLPAPER_DIR"/*.{png,jpg,jpeg,webp})
+
+if [ ${#wallpapers[@]} -eq 0 ]; then
+    echo "Error: No wallpapers found in $WALLPAPER_DIR"
+    exit 1
+fi
 
 ARG=${1:-next}
 
@@ -38,11 +40,7 @@ if [[ "$ARG" == "next" ]]; then
 
 	echo "$SELECTED_WALLPAPER" >> "$HISTORY_FILE"
 
-	swww img "$SELECTED_WALLPAPER" --transition-type random
-
-	wallust run "$SELECTED_WALLPAPER"
 	
-
 elif [[ "$ARG" == "prev" ]]; then
 
 	if [[ $(wc -l < "$HISTORY_FILE") -lt 2 ]]; then
@@ -59,20 +57,17 @@ elif [[ "$ARG" == "prev" ]]; then
 	echo -e "$(tail -2 $HISTORY_FILE)"
 	sed -i '$d' "$HISTORY_FILE"
 
-	swww img "$SELECTED_WALLPAPER" --transition-type random
-
-	wallust run "$SELECTED_WALLPAPER"
-
 fi	
 
+swww img "$SELECTED_WALLPAPER" --transition-type random
 
-# Refresh Waybar (SIGUSR2 reloads style without restarting)
+wallust run "$SELECTED_WALLPAPER"
+	
+    
 pkill -SIGUSR2 waybar
 
-# Refresh Kitty (sends signal to all open Kitty instances)
 killall -USR1 kitty
 
-# 
 hyprctl reload
 
 hyprpm reload
