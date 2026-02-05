@@ -1,6 +1,6 @@
 # Maintainer: jancchi <jancchi.the.rock@gmail.com>
 pkgname=random-wallpaper
-pkgver=r3.8334a14
+pkgver=r11.d86ec98
 pkgrel=1
 pkgdesc="A script to manage wallpaper history and transitions in Hyprland with Matugen"
 arch=('any')
