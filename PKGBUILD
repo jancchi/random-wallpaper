@@ -1,6 +1,6 @@
 # Maintainer: jancchi <jancchi.the.rock@gmail.com>
 pkgname=random-wallpaper
-pkgver=r5.1234567
+pkgver=r13.a4b48ab
 pkgrel=1
 pkgdesc="Wallpaper manager with automatic wallust templates"
 arch=('any')

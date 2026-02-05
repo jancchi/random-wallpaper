@@ -1,5 +1,5 @@
 # wallust.toml
-backend = "fastaneal"
+backend = "full"
 color_space = "lab"
 threshold = 20
 
