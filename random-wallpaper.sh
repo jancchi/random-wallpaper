@@ -30,19 +30,18 @@ if [[ ! -d "${WALLPAPER_DIR:-}" ]]; then
     exit 1
 fi
 
+GLOBAL_TEMPLATES="/usr/share/random-wallpaper/templates"
 MATUGEN_CONF_DIR="$HOME/.config/matugen"
 MATUGEN_TEMPLATE_DIR="$MATUGEN_CONF_DIR/templates"
 
-if [ ! -f "$MATUGEN_CONF_DIR/config.toml" ]; then
-    echo "Initializing Matugen config..."
-    mkdir -p "$MATUGEN_CONF_DIR"
-    cp /usr/share/random-wallpaper/templates/matugen.toml "$MATUGEN_CONF_DIR/config.toml"
-fi
+mkdir -p "$MATUGEN_TEMPLATE_DIR"
 
-if [ ! -d "$MATUGEN_TEMPLATE_DIR" ]; then
-    echo "Initializing Matugen templates..."
-    mkdir -p "$MATUGEN_TEMPLATE_DIR"
-    cp /usr/share/random-wallpaper/templates/colors.conf "$MATUGEN_TEMPLATE_DIR/"
+if [ -d "./templates" ]; then
+    cp ./templates/matugen.toml "$MATUGEN_CONF_DIR/config.toml"
+    cp ./templates/* "$MATUGEN_TEMPLATE_DIR/"
+elif [ -d "$GLOBAL_TEMPLATES" ]; then
+    cp "$GLOBAL_TEMPLATES/matugen.toml" "$MATUGEN_CONF_DIR/config.toml"
+    cp "$GLOBAL_TEMPLATES"/* "$MATUGEN_TEMPLATE_DIR/"
 fi
 
 mkdir -p "$DATA_DIR"
