@@ -9,14 +9,13 @@ DATA_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/random-wallpaper"
 HISTORY_FILE="$DATA_DIR/hist.txt"
 FUTURE_FILE="$DATA_DIR/future.txt"
 
-# Wallust specific paths
+# Wallust 
 WALLUST_DIR="$HOME/.config/wallust"
 GLOBAL_TEMPLATES="/usr/share/random-wallpaper/templates"
 
 mkdir -p "$CONF_DIR" "$DATA_DIR" "$WALLUST_DIR"
 touch "$HISTORY_FILE" "$FUTURE_FILE"
 
-# --- 1. User Configuration Check ---
 if [[ ! -f "$CONF_FILE" ]]; then
     echo "WALLPAPER_DIR=$HOME/Pictures/Wallpapers" > "$CONF_FILE"
     echo "Error: Config not found. Created template at $CONF_FILE"
@@ -25,7 +24,6 @@ if [[ ! -f "$CONF_FILE" ]]; then
 fi
 source "$CONF_FILE"
 
-# --- 2. Template Sync ---
 # Copies templates from the package to the user's wallust folder
 sync_templates() {
     local src=""
@@ -39,7 +37,7 @@ sync_templates() {
 }
 sync_templates
 
-# --- 3. Wallpaper Collection ---
+
 shopt -s nullglob
 wallpapers=("$WALLPAPER_DIR"/*.{png,jpg,jpeg,webp})
 shopt -u nullglob
@@ -48,7 +46,8 @@ if [ ${#wallpapers[@]} -eq 0 ]; then
     echo "Error: No images found in $WALLPAPER_DIR" && exit 1
 fi
 
-# --- 4. Logic (Next/Prev) ---
+
+
 ARG=${1:-next}
 
 if [[ "$ARG" == "next" ]]; then
@@ -66,11 +65,10 @@ elif [[ "$ARG" == "prev" ]]; then
     SELECTED_WALLPAPER=$(tail -1 "$HISTORY_FILE")
 fi
 
-# --- 5. Execution ---
+
 swww img "$SELECTED_WALLPAPER" --transition-type random
 wallust run "$SELECTED_WALLPAPER"
 
-# Refresh UI
 hyprctl reload
 pkill -SIGUSR2 waybar || waybar &
 killall -USR1 kitty || true
